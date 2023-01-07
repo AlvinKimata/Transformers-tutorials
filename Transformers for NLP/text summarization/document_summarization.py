@@ -19,7 +19,7 @@ def get_paper(paper_url, filename = 'random_paper.pdf'):
 
 #Function to convert pdf to text.
 paperFilePath = 'research_paper.pdf'
-API_KEY = "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"
+API_KEY = "xx"
 
 
 def display_paper_content(paperContent, page_start = 0, page_end = 5):
