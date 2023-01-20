@@ -8,7 +8,7 @@ from torch.nn import functional as F
 
 #Hyperparameters.
 torch.manual_seed(1337)
-batch_size = 4
+batch_size = 64
 block_size = 256
 max_iters = 5000
 eval_interval = 500
@@ -16,7 +16,7 @@ n_embd = 384
 learning_rate = 3e-4
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 eval_iters = 200
-n_embed = 32
+n_embed = 384
 n_head = 6
 n_layer = 6
 dropout = 0.2
@@ -24,7 +24,7 @@ dropout = 0.2
 
 
 #Inspect the dataset.
-with open('inputs/input.txt', 'r', encoding = 'utf-8') as f:
+with open('/content/input.txt', 'r', encoding = 'utf-8') as f:
   text = f.read()
 
 #Get the nuber of unique characters that occur in the text.
@@ -35,7 +35,6 @@ vocab_size = len(chars)
 #Create a mapping from characters sto integers.
 stoi = {ch: i for i, ch in enumerate(chars)}
 itos = {i: ch for i, ch in enumerate(chars)}
-
 encode = lambda s: [stoi[c] for c in s] #Encode: Take a string and output a list of integers.
 decode = lambda l: ''.join([itos[i] for i in l]) #Decoder: Take a list of integers and output a string.
 
@@ -47,8 +46,6 @@ n = int(0.9 * len(data))
 train_data = data[:n]
 val_data = data[n:]
 
-block_size = 8 #context size.
-
 x = train_data[:block_size]
 y = train_data[1: block_size + 1]
 
@@ -58,13 +55,15 @@ for t in range(block_size):
 
   # print(f'When input is {context} the target: {target}')
 
+# data loading
 def get_batch(split):
-  #Generate a small batch of data of inputs x and target y.
-  data = train_data if split == 'train' else val_data
-  ix = torch.randint(len(data) - block_size, (batch_size,))
-  x = torch.stack([data[i: i + block_size] for i in ix])
-  y = torch.stack([data[i+1: i + block_size + 1] for i in ix])
-  return x, y
+    # generate a small batch of data of inputs x and targets y
+    data = train_data if split == 'train' else val_data
+    ix = torch.randint(len(data) - block_size, (batch_size,))
+    x = torch.stack([data[i:i+block_size] for i in ix])
+    y = torch.stack([data[i+1:i+block_size+1] for i in ix])
+    x, y = x.to(device), y.to(device)
+    return x, y
 
 @torch.no_grad()
 def estimate_loss():
@@ -79,18 +78,6 @@ def estimate_loss():
         out[split] = losses.mean()
     m.train()
     return out
-
-xb, yb = get_batch('train')
-print(f'Inputs: \n {xb.shape}')
-print(f'Target: \n {yb.shape}')
-
-for b in range(batch_size):
-
-  for t in range(batch_size):
-    context = xb[b, :t + 1]
-    target = yb[b, t]
-
-    # print(f'When input is {context.tolist()} the target: {target}')
 
 
 #Create the head attention layer.
@@ -171,7 +158,7 @@ class Block(nn.Module):
     return x
 
 
-#Create a model.
+#Create the final bigram model.
 class BigramLanguageModel(nn.Module):
   def __init__(self):
     super().__init__()
@@ -229,17 +216,12 @@ class BigramLanguageModel(nn.Module):
 
 m = BigramLanguageModel()
 m = m.to(device)
-logits, loss = m(xb, yb)
 
-
-idx = torch.zeros((1, 1), dtype = torch.long)
-# print(decode(m.generate(idx, max_new_tokens = 100)[0].tolist()))
-
-
+#Print the number of model parameters.
+print(sum(p.numel() for p in m.parameters()) / 1e6, 'M parameters')
 
 #Create an optimizer object.
 optimizer = torch.optim.AdamW(m.parameters(), lr = 1e-3)
-
 
 #Training loop.
 for steps in tqdm(range(1000)):
@@ -259,5 +241,9 @@ for steps in tqdm(range(1000)):
 
 print(loss.item())
 
-print(decode(m.generate(idx, max_new_tokens = 500)[0].tolist()))
+#Generate model outputs.
+context = torch.zeros((1, 1), dtype = torch.long, device = device)
+print(decode(m.generate(context, max_new_tokens = 500)[0].tolist()))
 
+#Log outputs to output file.
+open('outputs.txt', 'w').write(decode(m.generate(context, max_new_tokens=10000)[0].tolist()))
