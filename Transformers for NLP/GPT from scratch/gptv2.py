@@ -128,6 +128,19 @@ class MultiHeadAttention(nn.Module):
     return torch.cat([h(x) for h in self.heads], dim = -1)
 
 
+#Create a feed-forward layer.
+class FeedFoward(nn.Module):
+  '''A simple linear layer followed by non-linearity.'''
+  def __init__(self, n_embd):
+    super().__init__()
+    self.net = nn.Sequential(
+      nn.Linear(n_embd, n_embd),
+      nn.ReLU()
+    )
+  
+  def forward(self, x):
+    return self.net(x)
+
 #Create a model.
 class BigramLanguageModel(nn.Module):
   def __init__(self):
@@ -139,6 +152,7 @@ class BigramLanguageModel(nn.Module):
 
     #4 communication channels of 8-dimensional self-attention.
     self.sa_heads = MultiHeadAttention(4, head_size = n_embd // 4)
+    self.ffwd(FeedFoward(n_embd))
     self.lm_head = nn.Linear(n_embd, vocab_size)
 
   def forward(self, idx, targets = None):
@@ -149,6 +163,9 @@ class BigramLanguageModel(nn.Module):
 
     #Plug in the self-attention layer.
     x = self.sa_heads(x) #Apply one head of self-attention.
+    
+    #Apply the feed-forward layer.
+    x = self.ffwd(x) 
     logits = self.lm_head(x) # (batch, time, vocab_size)
 
     if targets is None:
