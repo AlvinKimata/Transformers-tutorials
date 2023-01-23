@@ -192,6 +192,7 @@ class BigramLanguageModel(nn.Module):
 
     return logits, loss
 
+
   def generate(self, idx, max_new_tokens):
     '''Generate function for the model.'''
     for _ in range(max_new_tokens):

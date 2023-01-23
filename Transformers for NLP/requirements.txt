@@ -1,0 +1,4 @@
+wget
+openai
+pathlib
+pdfplumber
