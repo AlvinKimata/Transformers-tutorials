@@ -1,33 +1,32 @@
+import utils
 import streamlit as st
-from model import GeneralModel
 
 def app():
-
-    pred = GeneralModel()
-
     api_key = st.sidebar.text_input('API_KEY', type = "password")
+    paper_url = st.sidebar.text_input('Paper URL: e.g: \n https://arxiv.org/pdf/1808.04295.pdf', type = "default")
 
-    #use the streamlit cache.
-    @st.cache
-    def process_prompt(input):
-        return pred.model_prediction(input=input.strip(), api_key = api_key)
+    if paper_url:
+        pass
 
-        if api_key:
+    else:
+        st.error('Please provide a valid URL.')
 
-            #Setting up the title.
-            st.title("Write a summary based on the given research paper")
+    if api_key:
 
-            input = st.text_area(
-                "Use the example below or input your own input text."
-                value = s_example,
-                max_chars = 150,
-                height = 100
-            )
+        #Setting up the title.
+        st.title("Write a summary based on the given research paper")
 
-            if st.button('Submit'):
-                with st.spinner(text = "In progress"):
-                    reported_text = process_prompt(input)
-                    st.markdowm(report_text)
-        
-        else:
-            st.error("Please enter your openai API key")
+
+        if st.button('Submit'):
+            with st.spinner(text = "In progress"):
+                st.text('Downloading reserch paper...')
+                paperFilePath = utils.get_paper(paper_url=paper_url, filename='research_paper.pdf')
+                st.text('Paper downloaded successfully.')
+                st.text('Summarizing the research paper.')
+
+                paperContent = utils.pdfplumber.open(paperFilePath).pages
+                paperSummary = utils.showPaperSummary(paperContent)
+                st.markdown(paperSummary)
+    
+    else:
+        st.error("Please enter your openai API key")

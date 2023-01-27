@@ -3,60 +3,51 @@ import openai
 import pathlib
 import pdfplumber
 import numpy as np
+import streamlit as st
+
+paper_url = 'https://arxiv.org/pdf/1808.04295.pdf'
+API_KEY = "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"
 
 
 #Function that downloads a pdf from an address.
-def get_paper(paper_url, filename = 'random_paper.pdf'):
+def get_paper(paper_url: str, filename = 'random_paper.pdf'):
     downloadedPaper = wget.download(paper_url, filename)
     downloadedPaperFilePath = pathlib.Path(downloadedPaper)
     return downloadedPaperFilePath
 
-
-def display_paper_content(paperContent, page_start = 0, page_end = 5):
+def display_paper_content(paperContent, page_start = 0, page_end = 1):
     for page in paperContent[page_start:page_end]:
         print(page.extract_text())
 
 
-
 #Feed the text to  the GPT-3 model using the OpenAI api.
 def showPaperSummary(paperContent):
+    summary_text = []
     tldr_tag = "\n tl;dr:"
     # openai.organization = 'Personal'
     openai.api_key = API_KEY
     engine_list = openai.Engine.list() # calling the engines available from the openai api 
     
-    for page in paperContent:    
+    #Display progress bar for streamlit.
+    my_bar = st.progress(0)
+    progress_bar = list(np.linspace(0, 1, 16))
+    
+    for index, page in enumerate(paperContent):    
         text = page.extract_text() + tldr_tag
 
-        response = openai.Completion.create(engine="davinci",prompt=text,temperature=0.3,
-            max_tokens=140,
+        response = openai.Completion.create(
+            engine="text-davinci-003",
+            prompt="Summarize this for a second-grade student:\n \n" + text,
+            temperature = 0.3,
+            max_tokens= 140,
             top_p=1,
             frequency_penalty=0,
             presence_penalty=0,
             stop=["\n"]
         )
-        print(response["choices"][0]["text"])
+        # print(response["choices"][0]["text"])
+        summary_text.append(response["choices"][0]["text"])
 
-
-
-
-
-paper_url = 'https://arxiv.org/pdf/1808.04295.pdf'
-
-
-
-#Function to convert pdf to text.
-paperFilePath = 'research_paper.pdf'
-API_KEY = "xx"
-
-
-
-
-
-
-
-
-
-
-paperContent = pdfplumber.open(paperFilePath).pages
-print(showPaperSummary(paperContent))
+        my_bar.progress(progress_bar[index - 1])
+    
+    return summary_text
