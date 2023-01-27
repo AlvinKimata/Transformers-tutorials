@@ -2,7 +2,11 @@ import utils
 import streamlit as st
 
 def app():
-    api_key = st.sidebar.text_input('API_KEY', type = "password")
+    #Setting up the title.
+    st.title("OpenAI GPT-3 API for summarizing  research papers.")
+    st.text('This is a streamlit web app that depends on OpenAI GPT-3 API for research document summarization.')
+
+    api_key = st.sidebar.text_input('OpenAI API_KEY', type = "password")
     paper_url = st.sidebar.text_input('Paper URL: e.g: \n https://arxiv.org/pdf/1808.04295.pdf', type = "default")
 
     if paper_url:
@@ -13,10 +17,6 @@ def app():
 
     if api_key:
 
-        #Setting up the title.
-        st.title("Write a summary based on the given research paper")
-
-
         if st.button('Submit'):
             with st.spinner(text = "In progress"):
                 st.text('Downloading reserch paper...')
@@ -25,8 +25,8 @@ def app():
                 st.text('Summarizing the research paper.')
 
                 paperContent = utils.pdfplumber.open(paperFilePath).pages
-                paperSummary = utils.showPaperSummary(paperContent)
+                paperSummary = utils.showPaperSummary(api_key = api_key, paperContent = paperContent)
                 st.markdown(paperSummary)
     
     else:
-        st.error("Please enter your openai API key")
+        st.error("Please enter your OpenAI API key.")

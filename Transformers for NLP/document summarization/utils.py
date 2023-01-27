@@ -5,9 +5,6 @@ import pdfplumber
 import numpy as np
 import streamlit as st
 
-paper_url = 'https://arxiv.org/pdf/1808.04295.pdf'
-API_KEY = "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"
-
 
 #Function that downloads a pdf from an address.
 def get_paper(paper_url: str, filename = 'random_paper.pdf'):
@@ -21,11 +18,11 @@ def display_paper_content(paperContent, page_start = 0, page_end = 1):
 
 
 #Feed the text to  the GPT-3 model using the OpenAI api.
-def showPaperSummary(paperContent):
+def showPaperSummary(api_key, paperContent):
     summary_text = []
     tldr_tag = "\n tl;dr:"
     # openai.organization = 'Personal'
-    openai.api_key = API_KEY
+    openai.api_key = api_key
     engine_list = openai.Engine.list() # calling the engines available from the openai api 
     
     #Display progress bar for streamlit.
@@ -38,7 +35,7 @@ def showPaperSummary(paperContent):
         response = openai.Completion.create(
             engine="text-davinci-003",
             prompt="Summarize this for a second-grade student:\n \n" + text,
-            temperature = 0.3,
+            temperature = 0.8,
             max_tokens= 140,
             top_p=1,
             frequency_penalty=0,
