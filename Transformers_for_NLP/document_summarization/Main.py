@@ -3,8 +3,8 @@ import streamlit as st
 
 def app():
     #Setting up the title.
-    st.title("OpenAI GPT-3 API for summarizing  research papers.")
-    st.text('This is a streamlit web app that depends on OpenAI GPT-3 API for research document summarization.')
+    st.title("OpenAI GPT-3 app for summarizing  research papers.")
+    st.text('This is a streamlit web app that depends on OpenAI GPT-3 API \n for research document summarization.')
 
     api_key = st.sidebar.text_input('OpenAI API_KEY', type = "password")
     paper_url = st.sidebar.text_input('Paper URL: e.g: \n https://arxiv.org/pdf/1808.04295.pdf', type = "default")
