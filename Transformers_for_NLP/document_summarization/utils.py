@@ -12,8 +12,8 @@ def get_paper(paper_url: str, filename = 'random_paper.pdf'):
     downloadedPaperFilePath = pathlib.Path(downloadedPaper)
     return downloadedPaperFilePath
 
-def display_paper_content(paperContent, page_start = 0, page_end = 1):
-    for page in paperContent[page_start:page_end]:
+def display_paper_content(paperContent, page_start = 0, page_end = None):
+    for page in paperContent[page_start:]:
         print(page.extract_text())
 
 
@@ -44,8 +44,8 @@ def showPaperSummary(api_key, paperContent):
         )
         print(response["choices"][0]["text"])
         print('\n \n')
-#         summary_text.append(response["choices"][0]["text"])
+        summary_text.append(response["choices"][0]["text"])
 
-#         my_bar.progress(progress_bar[index - 1])
+        my_bar.progress(progress_bar[index - 1])
     
-#     return summary_text
+    return summary_text
