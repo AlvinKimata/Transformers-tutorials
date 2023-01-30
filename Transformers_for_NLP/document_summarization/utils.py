@@ -26,10 +26,10 @@ def showPaperSummary(api_key, paperContent):
     engine_list = openai.Engine.list() # calling the engines available from the openai api 
     
     #Display progress bar for streamlit.
-    my_bar = st.progress(0)
-    progress_bar = list(np.linspace(0, 1, 16))
+#     my_bar = st.progress(0)
+#     progress_bar = list(np.linspace(0, 1, 16))
     
-    for index, page in enumerate(paperContent):    
+    for page in paperContent:    
         text = page.extract_text() + tldr_tag
 
         response = openai.Completion.create(
@@ -42,9 +42,10 @@ def showPaperSummary(api_key, paperContent):
             presence_penalty=0,
             stop=["\n"]
         )
-        # print(response["choices"][0]["text"])
-        summary_text.append(response["choices"][0]["text"])
+        print(response["choices"][0]["text"])
+        print('\n \n')
+#         summary_text.append(response["choices"][0]["text"])
 
-        my_bar.progress(progress_bar[index - 1])
+#         my_bar.progress(progress_bar[index - 1])
     
-    return summary_text
+#     return summary_text
