@@ -46,6 +46,6 @@ def showPaperSummary(api_key, paperContent):
         print('\n \n')
         summary_text.append(response["choices"][0]["text"])
 
-        my_bar.progress(progress_bar[index - 1])
+#         my_bar.progress(progress_bar[index - 1])
     
     return summary_text
