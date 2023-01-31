@@ -10,6 +10,7 @@ def app():
     st.text('This is a streamlit web app that depends on OpenAI GPT-3 API \n for research document summarization.')
 
     api_key = st.sidebar.text_input('OpenAI API_KEY', type = "password")
+    st.sidebar.write('Click [here](https://platform.openai.com/account/api-keys) to obtain an OpenAI API key.')
     paper_url = st.sidebar.text_input('Paper URL: e.g: \n https://arxiv.org/pdf/1808.04295.pdf', type = "default")
 
     if paper_url:
