@@ -30,7 +30,7 @@ def showPaperSummary(api_key, text):
         engine="text-davinci-003",
         prompt="Summarize this for a second-grade student:\n \n" + text,
         temperature = 0.8,
-        max_tokens= 140,
+        max_tokens= 200,
         top_p=1,
         frequency_penalty=0,
         presence_penalty=0,
