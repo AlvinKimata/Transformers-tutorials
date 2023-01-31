@@ -1,5 +1,8 @@
 import utils
+import pdfplumber
+import numpy as np
 import streamlit as st
+
 
 def app():
     #Setting up the title.
@@ -21,14 +24,20 @@ def app():
             with st.spinner(text = "In progress"):
                 st.text('Downloading reserch paper...')
                 paperFilePath = utils.get_paper(paper_url=paper_url, filename='research_paper.pdf')
+                # paperFilePath = 'research_paper.pdf'
                 st.text('Paper downloaded successfully.')
                 st.text('Summarizing the research paper.')
 
-                paperContent = utils.pdfplumber.open(paperFilePath).pages
-                pdf_pages = len(paperContent)
+                document = pdfplumber.open(paperFilePath).pages
+
+                # Display progress bar for Streamlit.
+                progress_bar = st.progress(0)
+                progress = list(np.linspace(0, 100, len(document)))
                 
-                paperSummary = utils.showPaperSummary(api_key = api_key, paperContent = paperContent)
-                st.markdown(paperSummary)
-    
+            for index, item in enumerate(progress):
+                summary = utils.summarize_paper(api_key=api_key, paperContent=document[index])
+                progress_bar.progress(int(item))
+                st.markdown(summary + '\n')
+              
     else:
         st.error("Please enter your OpenAI API key.")

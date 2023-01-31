@@ -46,6 +46,3 @@ def summarize_paper(api_key, paperContent):
     summary = showPaperSummary(api_key, textContent)
 
     return summary
-
-
-
