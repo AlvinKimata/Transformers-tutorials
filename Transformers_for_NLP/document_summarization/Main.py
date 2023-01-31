@@ -25,6 +25,8 @@ def app():
                 st.text('Summarizing the research paper.')
 
                 paperContent = utils.pdfplumber.open(paperFilePath).pages
+                pdf_pages = len(paperContent)
+                
                 paperSummary = utils.showPaperSummary(api_key = api_key, paperContent = paperContent)
                 st.markdown(paperSummary)
     
