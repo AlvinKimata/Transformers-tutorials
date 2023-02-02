@@ -27,7 +27,7 @@ def showPaperSummary(api_key, text):
     text = text + tldr_tag
 
     response = openai.Completion.create(
-        engine="text-curie-001",
+        engine="text-davinci-003",
         prompt="Summarize this for a second-grade student:\n \n" + text,
         temperature = 0.8,
         max_tokens= 200,
