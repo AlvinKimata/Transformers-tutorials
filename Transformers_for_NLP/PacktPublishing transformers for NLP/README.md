@@ -1,0 +1,1 @@
+This directory contains code snippets for the PacktPublication book on Transformers for Natural Language Processing.
