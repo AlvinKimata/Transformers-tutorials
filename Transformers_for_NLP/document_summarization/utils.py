@@ -34,7 +34,7 @@ def showPaperSummary(api_key, text):
 
     response = openai.Completion.create(
         engine="text-davinci-003",
-        prompt="Summarize the text below for a second-grade student:\n " + text,
+        prompt="Summarize the text below for a second-grade student:\n \n" + text,
         temperature = 0.8,
         max_tokens= 200,
         top_p=1,
