@@ -1,1 +1,1 @@
-A step-by-step spelled-out explanation of backpropagation and training of neural networks by Andrej karpathy. Video series can be found [here](https://www.youtube.com/playlist?list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ)
+A step-by-step spelled-out explanation of backpropagation and training of neural networks by Andrej Karpathy. Video series can be found [here.](https://www.youtube.com/playlist?list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ)
