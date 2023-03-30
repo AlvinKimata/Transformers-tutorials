@@ -32,7 +32,7 @@ def showPaperSummary(api_key, text):
     openai.api_key = api_key    
     text = text + tldr_tag
 
-    response = openai.Completion.create(
+    response = openai.ChatCompletion.create(
         engine="gpt-3.5-turbo",
         prompt="Summarize the text below for a second-grade student:\n \n" + text,
         temperature = 0.8,
