@@ -46,7 +46,8 @@ def showPaperSummary(api_key, text):
         stop=["\n"]
     )
 
-    return response["choices"][0]["text"]
+    return response['choices'][0]['message']['content']
+
       
 # @retry(wait = wait_random_exponential(min = 1, max = 60), stop = stop_after_attempt(6))
 # def completion_with_backoff(**kwargs):
