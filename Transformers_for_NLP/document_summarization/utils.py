@@ -34,9 +34,10 @@ def showPaperSummary(api_key, text):
 
     response = openai.ChatCompletion.create(
         engine="gpt-3.5-turbo",
-        prompt="Summarize the text below for a second-grade student:\n \n" + text,
+        prompt=,
+        messages=[{"role": "user", "content": "Summarize the text below for a second-grade student:\n \n" + text}]
         temperature = 0.8,
-        max_tokens= 200,
+        max_tokens= 300,
         top_p=1,
         frequency_penalty=0,
         presence_penalty=0,
