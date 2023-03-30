@@ -33,8 +33,11 @@ def showPaperSummary(api_key, text):
     text = text + tldr_tag
 
     response = openai.ChatCompletion.create(
-        engine="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": "Summarize the text below for a second-grade student:\n \n" + text}],
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "Summarize the text below for a second-grade student."},
+            {"role": "user", "content": text}
+        ],
         temperature = 0.8,
         max_tokens= 300,
         top_p=1,
